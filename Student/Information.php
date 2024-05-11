@@ -6,9 +6,16 @@
   include("sidebar.php");
   include("header.php");
   echo('<link rel="stylesheet" href="css/Information.css">');
-  if(isset($_SESSION['status']) && $_SESSION['status'] == 'login success'){
-    $id = $_SESSION['maHS'];
-    $infor = getInformation($id);
+  // if(isset($_SESSION['status']) && $_SESSION['status'] == 'login success'){
+  //   $id = $_SESSION['maHS'];
+  //   $infor = getInformation($id);
+  // }
+  // echo isset($_FILES['file'])?"true":"false";
+  $id = $_SESSION['maHS'];
+  $information = getInformation($id);
+  $infor;
+  if($information['error'] == ''){
+      $infor = $information;
   }
 ?>
 
@@ -21,12 +28,13 @@
     <div class="card-body">
       <div class="d-flex align-items-center pb-3" id="InforHeader">
         <div class="imageStudent">
-          <img src="images/student.png" class="rounded-circle student-avatar me-3" alt="Student Avatar" id="studentAvatar">
-          <label for="input-file" id="labelFile">
-            <i class="fa-solid fa-user-plus"></i>
-            Update Image
-          </label>
-          <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file">
+        <img src="images/student.png" class="rounded-circle student-avatar me-3" alt="Student Avatar" id="studentAvatar">
+        <label for="input-file" id="labelFile">
+          <i class="fa-solid fa-user-plus"></i>
+          Update Image
+        </label>
+        <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="file">
+
         </div>
         <div class="student-details">
           <i class="fa-solid fa-circle-info"></i>
@@ -74,19 +82,26 @@
 <script>
   let profilePic = document.getElementById('studentAvatar');
   let inputFile = document.getElementById('input-file');
-  inputFile.onchange =function(){
-    profilePic.src = URL.createObjectURL(inputFile.files[0]);
-  }
-  // $('#studentAvatar').src = profilePic.src;
-  // var uploaded = "";
-  // inputFile.addEventListener("change",function(){
-  //   const reader = new FileReader();
-  //   reader.addEventListener("load",()=>{
-  //     uploaded = reader.result;
-  //     profilePic.style.backgroundImage = `url(${uploaded}`;
-  //   })
-  //   reader.readAsDataURL(this.files[0]);
-  // })
+  // inputFile.onchange =function(){
+  //   profilePic.src = URL.createObjectURL(inputFile.files[0]);
+  // }
+  var uploaded = "";
+  inputFile.addEventListener("change",function(){
+    const reader = new FileReader();
+    reader.addEventListener("load",()=>{
+      localStorage.setItem("recent-image", reader.result)
+      // profilePic.style.backgroundImage = `url(${uploaded}`;
+    })
+    reader.readAsDataURL(this.files[0]);
+  })
+  document.addEventListener("DOMContentLoaded",()=>{
+    const recentImageDataURL = localStorage.getItem("recent-image")
+    if(recentImageDataURL){
+      document.querySelector("#studentAvatar").setAttribute("src",recentImageDataURL)
+    }
+  })
+
+
   function copyText() {
     var text = document.getElementById("copy-text"); 
     var emailText = text.querySelector(".email-text"); 
@@ -105,11 +120,6 @@
 }
 
 </script>
-
-<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script> -->
-
-<!-- </body>
-</html> -->
 <?php 
   include("footer.php");
 ?>

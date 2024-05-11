@@ -1,9 +1,20 @@
 
 <?php
     require_once('Controller/process.php');
-    if(isset($_SESSION['status']) && $_SESSION['status'] == 'login success'){
-        $id = $_SESSION['maHS'];
-        $infor = getInformation($id);
+    // if(isset($_SESSION['status']) && $_SESSION['status'] == 'login success' && isset($_SESSION['maHS'])){
+    //     $id = $_SESSION['maHS'];
+    //     $information = getInformation($id);
+    //     $infor;
+    //     if($information['error'] == ''){
+    //         $infor = $information;
+    //     }
+
+    // }
+    $id = $_SESSION['maHS'];
+    $information = getInformation($id);
+    $infor;
+    if($information['error'] == ''){
+        $infor = $information;
     }
 ?>
 <style>
